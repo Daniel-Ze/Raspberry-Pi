@@ -1,0 +1,46 @@
+Raspberry Pi configuration:
+  sudo raspi-config
+    ->1 Expand Filesystem
+    ->6 Enable Camera
+  sudo reboot
+
+Keeping RaspianOS up-to-date:
+  sudo apt-get update
+  sudo apt-get upgrade
+  sudo reboot
+
+Install dependencies for the raspberry pi camera:
+  sudo apt-get install python-dev
+  sudo apt-get install python-rpi.gpio
+  sudo apt-get install python-picamera
+
+Copying camera-timelapse.py in your home directory and make time-lapse storage directory:
+Copy the python-script 'camera-timelapse.py' from your USB-flashdrive to /home/pi
+
+Open the terminal and make the time-lapse directory in your home-folder:
+  cd /home/pi
+  mkdir time-lapse
+
+Make the file 'time-lapse-launcher.sh' executable:
+  chmod 755 time-laps-launcher.sh
+
+Edit the rc.local file to execute the 'time-lapse-launcher.sh' to start
+'camera-timelapse.py' on boot-up:
+  sudo nano /etc/rc.local
+  Add the following line to the end before 'exit 0':
+    /home/pi/time-lapse-launcher.sh &
+
+ctrl+x  #Exit nano
+y #(yes) confirm saving the file
+
+Reboot and check if the script is running:
+  sudo reboot
+
+  pgrep -af python
+Something like this '14795 python camera-timelapse.py' should show up in the terminal
+
+Also check /home/pi/time-lapse/ for the first picture.
+
+Congrats! You have a running time-lapse raspberry pi with infrared for night-vision
+which takes a picture every 25 seconds (to change this you have to adjust the last
+argument in camera-timelapse.py -> time.sleep(20))!
